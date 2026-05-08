@@ -67,7 +67,6 @@ namespace SchoolApp
                 };
             });
 
-
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowClient", policy =>
@@ -75,9 +74,7 @@ namespace SchoolApp
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
-            
-            
-            
+                
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -108,21 +105,20 @@ namespace SchoolApp
                 options.OperationFilter<AuthorizeOperationFilter>();
             });
 
-            // Add services to the container.
-
-
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            //builder.Services.AddOpenApi();
-
-
-
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
 
             var app = builder.Build();
+
+            app.UseExceptionHandler();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                //app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
+                //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "School App v1"));
+                //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "School App v2"));
             }
 
             app.UseHttpsRedirection();
