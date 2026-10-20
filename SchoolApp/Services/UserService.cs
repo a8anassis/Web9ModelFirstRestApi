@@ -119,6 +119,9 @@ namespace SchoolApp.Services
                 new Claim(ClaimTypes.Role, user.Role.Name)
             };
 
+            claimsInfo.AddRange(user.Role.Capabilities
+                    .Select(c => new Claim("Capability", c.Name)));
+
             var jwtSecurityToken = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
